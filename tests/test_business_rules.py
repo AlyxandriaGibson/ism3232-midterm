@@ -2,6 +2,7 @@ from business_rules import (
     calculate_event_total,
     calculate_food_cost,
     get_event_discount,
+    needs_signoff,
 )
 
 
@@ -51,3 +52,15 @@ def test_service_fee_at_500_discount_cost():
 
 def test_no_service_fee_above_500_discount_cost():
     assert round(calculate_event_total(25.05, 20), 2) == 501.00
+
+
+def test_signoff_over_2500():
+    assert needs_signoff(2500.01) is True
+
+
+def test_signoff_below_2500():
+    assert needs_signoff(2499.99) is False
+
+
+def test_signoff_at_2500():
+    assert needs_signoff(2500.00) is False
