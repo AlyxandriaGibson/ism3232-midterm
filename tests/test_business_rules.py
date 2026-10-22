@@ -2,6 +2,7 @@ from business_rules import (
     calculate_event_total,
     calculate_food_cost,
     get_event_discount,
+    needs_second_chef,
     needs_signoff,
 )
 
@@ -64,3 +65,19 @@ def test_signoff_below_2500():
 
 def test_signoff_at_2500():
     assert needs_signoff(2500.00) is False
+
+
+def test_second_chef_above_80_guests():
+    assert needs_second_chef(81, 100.00) is True
+
+
+def test_no_second_chef_at_80_guests():
+    assert needs_second_chef(80, 100.00) is False
+
+
+def test_second_chef_at_3000_total():
+    assert needs_second_chef(80, 3000.00) is True
+
+
+def test_no_second_chef_below_3000_total():
+    assert needs_second_chef(80, 2999.99) is False
