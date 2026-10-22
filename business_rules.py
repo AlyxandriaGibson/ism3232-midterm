@@ -57,7 +57,7 @@ def total_booked(events: list) -> float:
         Total += calculate_event_total(
             event["guest_price"], event["guests"], event.get("nonprofit", False)
         )
-        return Total
+    return Total
 
 
 def largest_event(events: list) -> str:
