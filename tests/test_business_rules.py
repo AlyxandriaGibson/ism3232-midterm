@@ -1,9 +1,12 @@
 from business_rules import (
     calculate_event_total,
     calculate_food_cost,
+    format_event_line,
     get_event_discount,
+    largest_event,
     needs_second_chef,
     needs_signoff,
+    total_booked,
 )
 
 
@@ -81,3 +84,41 @@ def test_second_chef_at_3000_total():
 
 def test_no_second_chef_below_3000_total():
     assert needs_second_chef(80, 2999.99) is False
+
+
+def test_total_booked_short_list():
+    events = [
+        {"client": "Client 1", "guest_price": 10.00, "guests": 10},
+        {"client": "Client 2", "guest_price": 20.00, "guests": 25},
+    ]
+    assert round(total_booked(events), 2) == 725.00
+
+
+def test_largest_event_short_list():
+    events = [
+        {"client": "Client 1", "guest_price": 10.00, "guests": 10},
+        {"client": "Client 2", "guest_price": 20.00, "guests": 25},
+    ]
+    assert largest_event(events) == "Client 2"
+
+
+def test_largest_event_tie_returns_first_client():
+    events = [
+        {"client": "Client 1", "guest_price": 20.00, "guests": 25},
+        {"client": "Client 2", "guest_price": 20.00, "guests": 25},
+    ]
+    assert largest_event(events) == "Client 1"
+
+
+def test_largest_event_empty_list():
+    assert largest_event([]) == ""
+
+
+def test_format_event_line_without_requirements():
+    result = format_event_line("Juniper Spa", 531.00, False, False)
+    assert result == ("Juniper Spa: $531.00 | sign-off: no | second chef: no")
+
+
+def test_format_event_line_with_requirements():
+    result = format_event_line("Hilltop Gym", 3420.00, True, True)
+    assert result == ("Hilltop Gym: $3420.00 | sign-off: yes | second chef: yes")
